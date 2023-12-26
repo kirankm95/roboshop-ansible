@@ -41,7 +41,8 @@
       dest: /etc/systemd/system/catalogue.service
 
   - name: Load the service
-    ansible.builtin.command: systemctl daemon-reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
 
   - name: Start the service
     ansible.builtin.service:
@@ -59,5 +60,11 @@
       name: mongodb-org-shell
       state: present 
 
-  - name: Load Schema
-    ansible.builtin.shell: mongo --host mongodb.kiranku.online </app/schema/catalogue.js 
+  - name: get the categories count
+    ansible.builtin.command: mongo --host mongodb.kiranku.online --quiet --eval 'db = db.getSiblingDB("catalogue"); db.products.count()'
+    register: product_count
+
+    - name: print the count
+      ansible.builtin.debug:
+      msg: "product count: {{product_count}}"
+#    ansible.builtin.shell: mongo --host mongodb.kiranku.online </app/schema/catalogue.js 
