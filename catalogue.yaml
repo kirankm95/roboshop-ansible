@@ -67,4 +67,3 @@
     - name: print the count
       ansible.builtin.debug:
         msg: "product count: {{product_count}}"
-#    ansible.builtin.shell: mongo --host mongodb.kiranku.online </app/schema/catalogue.js 
