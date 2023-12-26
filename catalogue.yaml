@@ -44,7 +44,7 @@
     ansible.builtin.systemd_service:
       daemon_reload: true
 
-  - name: Start the service
+  - name: Start and enable the service
     ansible.builtin.service:
       name: catalogue
       state: started
@@ -71,3 +71,9 @@
   - name: load catalogue data
     ansible.builtin.shell: mongo --host mongodb.kiranku.online </app/schema/catalogue.js
     when: product_count.stdout == 0
+
+  - name: Start and enable the service
+    ansible.builtin.service:
+      name: catalogue
+      state: started
+      enabled: yes
