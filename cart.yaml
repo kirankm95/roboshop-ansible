@@ -1,5 +1,5 @@
-- name: user playbook
-  hosts: user
+- name: cart playbook 
+  hosts: cart
   become: yes
   tasks:
   - name: Install NodeJS, enable 18 version and install
@@ -26,12 +26,12 @@
 
   - name: Download the application code
     ansible.builtin.get_url:
-      url: https://roboshop-builds.s3.amazonaws.com/user.zip
+      url: https://roboshop-builds.s3.amazonaws.com/cart.zip
       dest: /tmp
       
   - name: unzip application to created app directory
     ansible.builtin.unarchive:
-      src: /tmp/user.zip
+      src: /tmp/cart.zip
       dest: /app
       remote_src: yes
 
@@ -40,10 +40,10 @@
     args:
       chdir: /app
 
-  - name: Setup SystemD user Service
+  - name: Setup SystemD cart Service
     ansible.builtin.copy:
-      src: user.service
-      dest: /etc/systemd/system/user.service
+      src: cart.service
+      dest: /etc/systemd/system/cart.service
 
   - name: Load the service
     ansible.builtin.systemd_service:
@@ -51,34 +51,6 @@
 
   - name: Start and enable the service
     ansible.builtin.service:
-      name: user
-      state: started
-      enabled: yes
-
-  - name: setup the mongodb repo file
-    ansible.builtin.copy:
-      src: mongo.repo
-      dest: /etc/yum.repos.d/mongo.repo
-
-  - name: install mongodb-client
-    ansible.builtin.package:
-      name: mongodb-org-shell
-      state: present 
-
-  - name: get the user count
-    ansible.builtin.command: mongo --host mongodb.kiranku.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
-    register: user_count
-
-  - name: print the count
-    ansible.builtin.debug:
-      msg: "user count: {{user_count}}"
-
-  - name: load user data
-    ansible.builtin.shell: mongo --host mongodb.kiranku.online </app/schema/user.js
-    when: user_count.stdout == "0"
-
-  - name: Start and enable the service
-    ansible.builtin.service:
-      name: user
+      name: cart
       state: started
       enabled: yes
