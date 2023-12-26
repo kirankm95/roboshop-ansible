@@ -42,4 +42,4 @@
   - name: Restart Nginx Service to load the changes of the configuration
     ansible.builtin.service:
       name: nginx
-      state: restarteds
+      state: restarted
